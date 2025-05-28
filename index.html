@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS サービスパズルゲーム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AWS サービスパズルゲーム</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="game-area">
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="welcome-screen">
+                <h2>AWSサービスの知識をテストしよう！</h2>
+                <p>このゲームでは、AWSサービスに関する様々なパズルに挑戦できます。</p>
+                <p>4種類のチャレンジがあり、各ラウンドでランダムに出題されます。</p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>サービス名当てクイズ</li>
+                    <li>サービスとその説明のマッチング</li>
+                    <li>穴埋めクイズ</li>
+                    <li>文字並べ替えクイズ</li>
+                </ul>
+                <p>全5ラウンドで、正解するとポイントが加算されます。</p>
+                <button id="start-btn" class="btn">ゲームを始める</button>
+            </div>
+
+            <!-- Challenge Screen -->
+            <div id="challenge-screen" class="challenge-screen hidden">
+                <div class="progress-bar">
+                    <div id="progress" class="progress" style="width: 0%"></div>
+                </div>
+                <h2 id="challenge-title">チャレンジ</h2>
+                <div id="challenge-content" class="challenge-content"></div>
+                <div id="feedback" class="feedback hidden"></div>
+                <div class="score-display">スコア: <span id="score">0</span></div>
+                <button id="next-btn" class="btn" disabled>次へ</button>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results-screen" class="results-screen hidden">
+                <h2>ゲーム終了！</h2>
+                <div class="score-display">最終スコア: <span id="final-score">0</span></div>
+                <div id="result-message"></div>
+                <button id="restart-btn" class="btn">もう一度プレイ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
