@@ -1,394 +1,478 @@
-// AWS Services data
-const awsServices = {
-    "EC2": "クラウドで拡張可能なコンピューティング容量を提供する弾力的なコンピュートサービス",
-    "S3": "業界をリードするスケーラビリティ、データ可用性、セキュリティ、およびパフォーマンスを提供するオブジェクトストレージサービス",
-    "Lambda": "サーバーのプロビジョニングや管理なしでコードを実行できるサーバーレスコンピューティングサービス",
-    "DynamoDB": "高速で予測可能なパフォーマンスとシームレスなスケーラビリティを提供するフルマネージドNoSQLデータベースサービス",
-    "RDS": "リレーショナルデータベースのセットアップ、運用、スケーリングを容易にするマネージドリレーショナルデータベースサービス",
-    "CloudFront": "データ、ビデオ、アプリケーション、APIをグローバルに安全に配信するコンテンツ配信ネットワークサービス",
-    "IAM": "AWSリソースへのアクセスを安全に制御するのに役立つWebサービス",
-    "VPC": "論理的に分離された仮想ネットワークでAWSリソースを起動できるサービス",
-    "SNS": "アプリケーション間およびアプリケーションと人間の間の通信のためのフルマネージドメッセージングサービス",
-    "SQS": "マイクロサービスの分離とスケーリングを可能にするフルマネージドメッセージキューイングサービス",
-    "CloudWatch": "AWSリソースのデータと実用的なインサイトを提供する監視および可観測性サービス",
-    "Route53": "高可用性でスケーラブルなクラウドドメインネームシステム（DNS）Webサービス",
-    "ECS": "フルマネージドコンテナオーケストレーションサービス",
-    "EKS": "AWSでKubernetesを簡単に実行できるマネージドKubernetesサービス",
-    "Fargate": "ECSとEKSの両方で動作するコンテナ用のサーバーレスコンピューティングエンジン",
-    "Glacier": "データアーカイブと長期バックアップのための安全で耐久性があり、非常に低コストのストレージサービス",
-    "Redshift": "クラウドでのフルマネージドのペタバイト規模のデータウェアハウスサービス",
-    "ElastiCache": "RedisとMemcachedエンジンをサポートするインメモリキャッシングサービス",
-    "SageMaker": "開発者やデータサイエンティストが機械学習モデルを構築、トレーニング、デプロイできるフルマネージドサービス",
-    "Athena": "標準SQLを使用してAmazon S3のデータを簡単に分析できるインタラクティブなクエリサービス"
-};
+// AWS Architecture Puzzle Game
+
+// Game data
+const levels = [
+    {
+        id: 1,
+        title: "静的ウェブサイトホスティング",
+        description: "コスト効率の良い静的ウェブサイトをホスティングするソリューションを構築してください。",
+        difficulty: "簡単",
+        requirements: [
+            "静的HTMLファイル、CSS、JavaScriptをホスティングする",
+            "グローバルに高速なコンテンツ配信を実現する",
+            "HTTPSによる安全な接続を提供する",
+            "コスト効率の良いソリューションであること"
+        ],
+        dropZones: [
+            { id: "storage", x: 150, y: 150, label: "ストレージ" },
+            { id: "delivery", x: 400, y: 150, label: "配信" },
+            { id: "security", x: 275, y: 300, label: "セキュリティ" }
+        ],
+        connections: [
+            { from: "storage", to: "delivery" },
+            { from: "delivery", to: "security" }
+        ],
+        availableServices: [
+            { id: "s3", name: "S3", icon: "s3.png", description: "オブジェクトストレージサービス" },
+            { id: "ec2", name: "EC2", icon: "ec2.png", description: "仮想サーバー" },
+            { id: "cloudfront", name: "CloudFront", icon: "cloudfront.png", description: "コンテンツ配信ネットワーク" },
+            { id: "rds", name: "RDS", icon: "rds.png", description: "リレーショナルデータベース" },
+            { id: "route53", name: "Route 53", icon: "route53.png", description: "DNSサービス" },
+            { id: "acm", name: "ACM", icon: "acm.png", description: "SSL/TLS証明書管理" }
+        ],
+        solution: {
+            "storage": "s3",
+            "delivery": "cloudfront",
+            "security": "acm"
+        },
+        hints: [
+            "静的コンテンツのホスティングには、サーバーレスのストレージサービスが最適です。",
+            "グローバルな配信には、エッジロケーションを活用したサービスを検討してください。",
+            "安全な接続には、SSL/TLS証明書が必要です。"
+        ]
+    },
+    {
+        id: 2,
+        title: "スケーラブルなウェブアプリケーション",
+        description: "負荷に応じて自動的にスケールするウェブアプリケーションを構築してください。",
+        difficulty: "普通",
+        requirements: [
+            "Webサーバーを複数のアベイラビリティゾーンに配置する",
+            "負荷に応じて自動的にスケールする仕組みを実装する",
+            "トラフィックを複数のサーバーに分散する",
+            "データを永続化するためのデータベースを設定する"
+        ],
+        dropZones: [
+            { id: "loadbalancer", x: 275, y: 100, label: "負荷分散" },
+            { id: "compute", x: 275, y: 250, label: "コンピューティング" },
+            { id: "database", x: 275, y: 400, label: "データベース" }
+        ],
+        connections: [
+            { from: "loadbalancer", to: "compute" },
+            { from: "compute", to: "database" }
+        ],
+        availableServices: [
+            { id: "ec2", name: "EC2", icon: "ec2.png", description: "仮想サーバー" },
+            { id: "elb", name: "ELB", icon: "elb.png", description: "Elastic Load Balancing" },
+            { id: "asg", name: "Auto Scaling", icon: "asg.png", description: "Auto Scaling Group" },
+            { id: "rds", name: "RDS", icon: "rds.png", description: "リレーショナルデータベース" },
+            { id: "dynamodb", name: "DynamoDB", icon: "dynamodb.png", description: "NoSQLデータベース" },
+            { id: "lambda", name: "Lambda", icon: "lambda.png", description: "サーバーレスコンピューティング" }
+        ],
+        solution: {
+            "loadbalancer": "elb",
+            "compute": "asg",
+            "database": "rds"
+        },
+        hints: [
+            "複数のサーバーにトラフィックを分散するには、ロードバランサーが必要です。",
+            "需要に応じて自動的にサーバー数を調整するサービスを選びましょう。",
+            "リレーショナルデータベースが必要な場合は、マネージドサービスを検討してください。"
+        ]
+    }
+];
 
 // Game state
-let currentRound = 0;
-let totalRounds = 5;
+let currentLevel = null;
 let score = 0;
-let currentChallenge = null;
-let answered = false;
+let completedLevels = {};
+let placedServices = {};
+let timerInterval = null;
+let remainingTime = 0;
 
 // DOM Elements
 const welcomeScreen = document.getElementById('welcome-screen');
-const challengeScreen = document.getElementById('challenge-screen');
+const levelSelectScreen = document.getElementById('level-select-screen');
+const puzzleScreen = document.getElementById('puzzle-screen');
 const resultsScreen = document.getElementById('results-screen');
-const challengeTitle = document.getElementById('challenge-title');
-const challengeContent = document.getElementById('challenge-content');
-const feedbackElement = document.getElementById('feedback');
+const puzzleTitle = document.getElementById('puzzle-title');
+const requirementsList = document.getElementById('requirements-list');
+const dropZonesContainer = document.getElementById('drop-zones');
+const connectionsContainer = document.getElementById('connections');
+const availableServicesContainer = document.getElementById('available-services');
 const scoreElement = document.getElementById('score');
 const finalScoreElement = document.getElementById('final-score');
 const resultMessage = document.getElementById('result-message');
-const progressBar = document.getElementById('progress');
-const startBtn = document.getElementById('start-btn');
-const nextBtn = document.getElementById('next-btn');
-const restartBtn = document.getElementById('restart-btn');
+const completedLevelsElement = document.getElementById('completed-levels');
+const timerElement = document.getElementById('timer');
+const feedbackModal = document.getElementById('feedback-modal');
+const feedbackTitle = document.getElementById('feedback-title');
+const feedbackMessage = document.getElementById('feedback-message');
+const feedbackDetails = document.getElementById('feedback-details');
 
 // Event Listeners
-startBtn.addEventListener('click', startGame);
-nextBtn.addEventListener('click', nextChallenge);
-restartBtn.addEventListener('click', startGame);
+document.getElementById('start-btn').addEventListener('click', showLevelSelect);
+document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
+document.getElementById('hint-btn').addEventListener('click', showHint);
+document.getElementById('back-to-levels-btn').addEventListener('click', showLevelSelect);
+document.getElementById('continue-btn').addEventListener('click', closeFeedbackModal);
+document.getElementById('restart-btn').addEventListener('click', showLevelSelect);
+document.querySelector('.close-modal').addEventListener('click', closeFeedbackModal);
 
-// Game Functions
-function startGame() {
+// Initialize level selection
+function showLevelSelect() {
     welcomeScreen.classList.add('hidden');
     resultsScreen.classList.add('hidden');
-    challengeScreen.classList.remove('hidden');
+    puzzleScreen.classList.add('hidden');
+    levelSelectScreen.classList.remove('hidden');
     
-    currentRound = 0;
-    score = 0;
-    updateScore();
-    nextChallenge();
+    // Add event listeners to level cards
+    document.querySelectorAll('.level-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const levelId = parseInt(card.dataset.level);
+            startLevel(levelId);
+        });
+    });
 }
 
-function nextChallenge() {
-    if (currentRound >= totalRounds) {
-        showResults();
-        return;
+// Start a level
+function startLevel(levelId) {
+    // Find the level data
+    currentLevel = levels.find(level => level.id === levelId);
+    if (!currentLevel) return;
+    
+    // Reset level state
+    placedServices = {};
+    
+    // Show puzzle screen
+    levelSelectScreen.classList.add('hidden');
+    puzzleScreen.classList.remove('hidden');
+    
+    // Set up the level
+    puzzleTitle.textContent = `レベル ${currentLevel.id}: ${currentLevel.title}`;
+    
+    // Set up requirements
+    requirementsList.innerHTML = '';
+    currentLevel.requirements.forEach(req => {
+        const reqItem = document.createElement('div');
+        reqItem.className = 'requirement-item';
+        reqItem.textContent = req;
+        requirementsList.appendChild(reqItem);
+    });
+    
+    // Set up drop zones
+    dropZonesContainer.innerHTML = '';
+    currentLevel.dropZones.forEach(zone => {
+        const dropZone = document.createElement('div');
+        dropZone.className = 'drop-zone';
+        dropZone.id = `zone-${zone.id}`;
+        dropZone.style.left = `${zone.x}px`;
+        dropZone.style.top = `${zone.y}px`;
+        
+        const zoneLabel = document.createElement('div');
+        zoneLabel.className = 'zone-label';
+        zoneLabel.textContent = zone.label;
+        
+        dropZone.appendChild(zoneLabel);
+        dropZonesContainer.appendChild(dropZone);
+        
+        // Add drop event listeners
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('drop', handleDrop);
+        dropZone.addEventListener('dragenter', handleDragEnter);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+    });
+    
+    // Set up connections
+    drawConnections();
+    
+    // Set up available services
+    availableServicesContainer.innerHTML = '';
+    currentLevel.availableServices.forEach(service => {
+        const serviceItem = document.createElement('div');
+        serviceItem.className = 'service-item';
+        serviceItem.draggable = true;
+        serviceItem.dataset.serviceId = service.id;
+        
+        // For now, use a placeholder for the icon
+        const serviceIcon = document.createElement('div');
+        serviceIcon.className = 'service-icon';
+        serviceIcon.textContent = service.name.charAt(0);
+        
+        const serviceName = document.createElement('div');
+        serviceName.textContent = service.name;
+        
+        const serviceDesc = document.createElement('div');
+        serviceDesc.className = 'service-description';
+        serviceDesc.textContent = service.description;
+        
+        serviceItem.appendChild(serviceIcon);
+        serviceItem.appendChild(serviceName);
+        serviceItem.appendChild(serviceDesc);
+        availableServicesContainer.appendChild(serviceItem);
+        
+        // Add drag event listeners
+        serviceItem.addEventListener('dragstart', handleDragStart);
+        serviceItem.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Set up timer
+    remainingTime = 300; // 5 minutes
+    updateTimer();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Draw connections between drop zones
+function drawConnections() {
+    connectionsContainer.innerHTML = '';
+    
+    if (!currentLevel || !currentLevel.connections) return;
+    
+    currentLevel.connections.forEach(conn => {
+        const fromZone = document.getElementById(`zone-${conn.from}`);
+        const toZone = document.getElementById(`zone-${conn.to}`);
+        
+        if (!fromZone || !toZone) return;
+        
+        const fromRect = fromZone.getBoundingClientRect();
+        const toRect = toZone.getBoundingClientRect();
+        const boardRect = dropZonesContainer.getBoundingClientRect();
+        
+        // Calculate center points
+        const fromX = fromRect.left + fromRect.width / 2 - boardRect.left;
+        const fromY = fromRect.top + fromRect.height / 2 - boardRect.top;
+        const toX = toRect.left + toRect.width / 2 - boardRect.left;
+        const toY = toRect.top + toRect.height / 2 - boardRect.top;
+        
+        // Calculate distance and angle
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        // Create connection line
+        const connection = document.createElement('div');
+        connection.className = 'connection';
+        connection.style.width = `${distance}px`;
+        connection.style.left = `${fromX}px`;
+        connection.style.top = `${fromY}px`;
+        connection.style.transform = `rotate(${angle}deg)`;
+        
+        connectionsContainer.appendChild(connection);
+    });
+}
+
+// Drag and drop handlers
+function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', e.target.dataset.serviceId);
+    e.target.classList.add('dragging');
+}
+
+function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('highlight');
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('highlight');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const dropZone = e.currentTarget;
+    dropZone.classList.remove('highlight');
+    
+    const serviceId = e.dataTransfer.getData('text/plain');
+    const zoneId = dropZone.id.replace('zone-', '');
+    
+    // Place the service in the drop zone
+    placeService(serviceId, zoneId);
+}
+
+// Place a service in a drop zone
+function placeService(serviceId, zoneId) {
+    const service = currentLevel.availableServices.find(s => s.id === serviceId);
+    const dropZone = document.getElementById(`zone-${zoneId}`);
+    
+    if (!service || !dropZone) return;
+    
+    // Remove any existing service in this zone
+    const existingService = dropZone.querySelector('.placed-service');
+    if (existingService) {
+        existingService.remove();
     }
-
-    currentRound++;
-    updateProgress();
-    answered = false;
-    nextBtn.disabled = true;
-    feedbackElement.classList.add('hidden');
-
-    // Randomly select a challenge type
-    const challengeTypes = [
-        guessServiceFromDescription,
-        matchServiceToDescription,
-        fillInTheBlanks,
-        unscrambleService
-    ];
     
-    const randomChallenge = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
-    randomChallenge();
+    // Create placed service element
+    const placedService = document.createElement('div');
+    placedService.className = 'placed-service';
+    placedService.dataset.serviceId = serviceId;
+    
+    // For now, use a placeholder for the icon
+    const serviceIcon = document.createElement('div');
+    serviceIcon.className = 'service-icon';
+    serviceIcon.textContent = service.name.charAt(0);
+    
+    const serviceName = document.createElement('div');
+    serviceName.className = 'service-name';
+    serviceName.textContent = service.name;
+    
+    placedService.appendChild(serviceIcon);
+    placedService.appendChild(serviceName);
+    dropZone.appendChild(placedService);
+    
+    // Update placed services state
+    placedServices[zoneId] = serviceId;
 }
 
-function updateProgress() {
-    const progressPercentage = (currentRound / totalRounds) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
-}
-
-function updateScore() {
+// Check the solution
+function checkSolution() {
+    if (!currentLevel) return;
+    
+    const solution = currentLevel.solution;
+    let correct = 0;
+    let total = Object.keys(solution).length;
+    let details = [];
+    
+    // Check each drop zone
+    for (const zoneId in solution) {
+        const expectedService = solution[zoneId];
+        const actualService = placedServices[zoneId] || null;
+        
+        if (actualService === expectedService) {
+            correct++;
+            details.push(`✓ ${zoneId}に${getServiceName(expectedService)}を正しく配置しました。`);
+        } else if (actualService) {
+            details.push(`✗ ${zoneId}には${getServiceName(expectedService)}が必要ですが、${getServiceName(actualService)}が配置されています。`);
+        } else {
+            details.push(`✗ ${zoneId}に${getServiceName(expectedService)}を配置する必要があります。`);
+        }
+    }
+    
+    // Calculate score
+    const levelScore = Math.round((correct / total) * 100);
+    
+    // Update completed levels
+    completedLevels[currentLevel.id] = levelScore;
+    
+    // Update total score
+    score = Object.values(completedLevels).reduce((sum, score) => sum + score, 0);
     scoreElement.textContent = score;
-    finalScoreElement.textContent = score;
+    
+    // Show feedback
+    showFeedback(correct === total, levelScore, details);
+    
+    // Stop timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 }
 
-function showFeedback(isCorrect, message) {
-    feedbackElement.textContent = message;
-    feedbackElement.classList.remove('hidden', 'correct', 'incorrect');
-    feedbackElement.classList.add(isCorrect ? 'correct' : 'incorrect');
-    nextBtn.disabled = false;
+// Show hint
+function showHint() {
+    if (!currentLevel || !currentLevel.hints || currentLevel.hints.length === 0) return;
+    
+    // Get a random hint
+    const randomHint = currentLevel.hints[Math.floor(Math.random() * currentLevel.hints.length)];
+    
+    // Show hint in feedback modal
+    feedbackTitle.textContent = 'ヒント';
+    feedbackMessage.textContent = randomHint;
+    feedbackDetails.textContent = '';
+    feedbackModal.classList.remove('hidden');
 }
 
+// Show feedback modal
+function showFeedback(isCorrect, levelScore, details) {
+    feedbackTitle.textContent = isCorrect ? '正解！' : '不正解';
+    feedbackMessage.textContent = isCorrect 
+        ? `素晴らしい！すべてのサービスを正しく配置しました。スコア: ${levelScore}点`
+        : `いくつかのサービスが正しく配置されていません。スコア: ${levelScore}点`;
+    
+    feedbackDetails.innerHTML = details.map(detail => `<p>${detail}</p>`).join('');
+    feedbackModal.classList.remove('hidden');
+}
+
+// Close feedback modal
+function closeFeedbackModal() {
+    feedbackModal.classList.add('hidden');
+    
+    // If all levels are completed, show results
+    const allLevelsCompleted = levels.every(level => completedLevels[level.id] !== undefined);
+    if (allLevelsCompleted) {
+        showResults();
+    }
+}
+
+// Show results screen
 function showResults() {
-    challengeScreen.classList.add('hidden');
+    puzzleScreen.classList.add('hidden');
     resultsScreen.classList.remove('hidden');
     
-    if (score >= 40) {
-        resultMessage.textContent = "素晴らしい！あなたはAWSのエキスパートです！";
-    } else if (score >= 25) {
-        resultMessage.textContent = "よくできました！AWSサービスについてよく知っていますね！";
+    finalScoreElement.textContent = score;
+    
+    // Display message based on score
+    const maxScore = levels.length * 100;
+    const percentage = (score / maxScore) * 100;
+    
+    if (percentage >= 90) {
+        resultMessage.textContent = 'すばらしい！あなたはAWSアーキテクチャの達人です！';
+    } else if (percentage >= 70) {
+        resultMessage.textContent = 'よくできました！AWSサービスについてよく理解しています。';
     } else {
-        resultMessage.textContent = "頑張りました！これからもAWSサービスについて学び続けましょう！";
+        resultMessage.textContent = '頑張りました！さらにAWSサービスについて学びましょう。';
     }
-}
-
-// Challenge 1: Guess Service from Description
-function guessServiceFromDescription() {
-    challengeTitle.textContent = "チャレンジ: AWSサービス名を当てよう";
     
-    // Select a random service
-    const services = Object.keys(awsServices);
-    const randomService = services[Math.floor(Math.random() * services.length)];
-    const description = awsServices[randomService];
-    
-    currentChallenge = {
-        type: 'guess',
-        answer: randomService
-    };
-    
-    // Create challenge content
-    challengeContent.innerHTML = `
-        <p>以下の説明に合うAWSサービスは何でしょうか？</p>
-        <p><strong>${description}</strong></p>
-        <div>
-            <input type="text" id="guess-input" placeholder="サービス名を入力">
-            <button id="submit-guess" class="btn">回答する</button>
-        </div>
-    `;
-    
-    // Add event listener
-    document.getElementById('submit-guess').addEventListener('click', function() {
-        if (answered) return;
-        
-        const userGuess = document.getElementById('guess-input').value.trim().toUpperCase();
-        const correctAnswer = currentChallenge.answer.toUpperCase();
-        
-        if (userGuess === correctAnswer) {
-            score += 10;
-            updateScore();
-            showFeedback(true, `正解です！${currentChallenge.answer}が正しいです。`);
-        } else {
-            showFeedback(false, `不正解です。正解は${currentChallenge.answer}でした。`);
-        }
-        
-        answered = true;
+    // Display completed levels
+    completedLevelsElement.innerHTML = '';
+    levels.forEach(level => {
+        const levelScore = completedLevels[level.id] || 0;
+        const levelResult = document.createElement('div');
+        levelResult.className = 'level-result';
+        levelResult.innerHTML = `
+            <div>レベル ${level.id}: ${level.title}</div>
+            <div class="level-score">${levelScore}点</div>
+        `;
+        completedLevelsElement.appendChild(levelResult);
     });
 }
 
-// Challenge 2: Match Service to Description
-function matchServiceToDescription() {
-    challengeTitle.textContent = "チャレンジ: サービスと説明をマッチングさせよう";
-    
-    // Select 4 random services
-    const services = Object.keys(awsServices);
-    const selectedServices = [];
-    const usedIndices = new Set();
-    
-    while (selectedServices.length < 4) {
-        const randomIndex = Math.floor(Math.random() * services.length);
-        if (!usedIndices.has(randomIndex)) {
-            usedIndices.add(randomIndex);
-            const service = services[randomIndex];
-            selectedServices.push({
-                name: service,
-                description: awsServices[service]
-            });
-        }
+// Update timer
+function updateTimer() {
+    if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        checkSolution();
+        return;
     }
     
-    // Shuffle descriptions
-    const shuffledDescriptions = [...selectedServices].sort(() => Math.random() - 0.5);
+    remainingTime--;
     
-    currentChallenge = {
-        type: 'match',
-        services: selectedServices,
-        shuffledDescriptions: shuffledDescriptions,
-        matches: {},
-        correctMatches: 0
-    };
-    
-    // Create challenge content
-    let servicesHTML = '<div class="match-column"><h3>サービス</h3>';
-    selectedServices.forEach((service, index) => {
-        servicesHTML += `<div class="match-item service" data-index="${index}">${service.name}</div>`;
-    });
-    servicesHTML += '</div>';
-    
-    let descriptionsHTML = '<div class="match-column"><h3>説明</h3>';
-    shuffledDescriptions.forEach((service, index) => {
-        descriptionsHTML += `<div class="match-item description" data-index="${index}">${service.description}</div>`;
-    });
-    descriptionsHTML += '</div>';
-    
-    challengeContent.innerHTML = `
-        <p>各サービスを正しい説明とマッチングさせてください。サービスをクリックしてから、対応する説明をクリックしてください。</p>
-        <div class="match-game">
-            ${servicesHTML}
-            ${descriptionsHTML}
-        </div>
-        <button id="check-matches" class="btn">マッチングを確認</button>
-    `;
-    
-    // Add event listeners
-    let selectedService = null;
-    
-    document.querySelectorAll('.service').forEach(element => {
-        element.addEventListener('click', function() {
-            if (answered) return;
-            
-            // Deselect any previously selected service
-            document.querySelectorAll('.service').forEach(el => el.classList.remove('selected'));
-            
-            // Select this service
-            this.classList.add('selected');
-            selectedService = parseInt(this.dataset.index);
-        });
-    });
-    
-    document.querySelectorAll('.description').forEach(element => {
-        element.addEventListener('click', function() {
-            if (answered || selectedService === null) return;
-            
-            const descriptionIndex = parseInt(this.dataset.index);
-            
-            // Remove previous match for this service if exists
-            Object.keys(currentChallenge.matches).forEach(serviceIdx => {
-                if (currentChallenge.matches[serviceIdx] === descriptionIndex) {
-                    delete currentChallenge.matches[serviceIdx];
-                }
-            });
-            
-            // Create new match
-            currentChallenge.matches[selectedService] = descriptionIndex;
-            
-            // Update UI
-            document.querySelectorAll('.description').forEach(el => {
-                if (parseInt(el.dataset.index) === descriptionIndex) {
-                    el.classList.add('matched');
-                }
-            });
-            
-            // Deselect service
-            document.querySelectorAll('.service').forEach(el => el.classList.remove('selected'));
-            selectedService = null;
-        });
-    });
-    
-    document.getElementById('check-matches').addEventListener('click', function() {
-        if (answered) return;
-        
-        // Check matches
-        currentChallenge.correctMatches = 0;
-        
-        for (let i = 0; i < selectedServices.length; i++) {
-            if (currentChallenge.matches[i] !== undefined) {
-                const matchedDescription = shuffledDescriptions[currentChallenge.matches[i]];
-                if (selectedServices[i].name === matchedDescription.name) {
-                    currentChallenge.correctMatches++;
-                }
-            }
-        }
-        
-        score += currentChallenge.correctMatches * 5;
-        updateScore();
-        
-        showFeedback(
-            currentChallenge.correctMatches === 4,
-            `${currentChallenge.correctMatches}個の正しいマッチングがありました！`
-        );
-        
-        answered = true;
-    });
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Challenge 3: Fill in the Blanks
-function fillInTheBlanks() {
-    challengeTitle.textContent = "チャレンジ: 空欄を埋めよう";
-    
-    // Select a random service
-    const services = Object.keys(awsServices);
-    const randomService = services[Math.floor(Math.random() * services.length)];
-    
-    // Create a masked version with some letters replaced by underscores
-    const serviceName = randomService.split('');
-    const numToMask = Math.min(serviceName.length - 1, Math.max(2, Math.floor(serviceName.length / 2)));
-    const maskPositions = [];
-    
-    while (maskPositions.length < numToMask) {
-        const pos = Math.floor(Math.random() * serviceName.length);
-        if (!maskPositions.includes(pos)) {
-            maskPositions.push(pos);
-        }
-    }
-    
-    const maskedService = serviceName.map((char, index) => 
-        maskPositions.includes(index) ? '_' : char
-    ).join('');
-    
-    currentChallenge = {
-        type: 'fill',
-        answer: randomService
-    };
-    
-    // Create challenge content
-    challengeContent.innerHTML = `
-        <p>空欄を埋めて、AWSサービス名を完成させてください：</p>
-        <div class="fill-blanks">${maskedService}</div>
-        <div>
-            <input type="text" id="fill-input" placeholder="サービス名を入力">
-            <button id="submit-fill" class="btn">回答する</button>
-        </div>
-    `;
-    
-    // Add event listener
-    document.getElementById('submit-fill').addEventListener('click', function() {
-        if (answered) return;
-        
-        const userGuess = document.getElementById('fill-input').value.trim().toUpperCase();
-        const correctAnswer = currentChallenge.answer.toUpperCase();
-        
-        if (userGuess === correctAnswer) {
-            score += 8;
-            updateScore();
-            showFeedback(true, `正解です！${currentChallenge.answer}が正しいです。`);
-        } else {
-            showFeedback(false, `不正解です。正解は${currentChallenge.answer}でした。`);
-        }
-        
-        answered = true;
-    });
+// Helper function to get service name by ID
+function getServiceName(serviceId) {
+    const service = currentLevel.availableServices.find(s => s.id === serviceId);
+    return service ? service.name : serviceId;
 }
 
-// Challenge 4: Unscramble Service
-function unscrambleService() {
-    challengeTitle.textContent = "チャレンジ: 文字を並べ替えよう";
-    
-    // Select a service with at least 4 letters
-    const services = Object.keys(awsServices).filter(service => service.length >= 4);
-    const randomService = services[Math.floor(Math.random() * services.length)];
-    
-    // Scramble the letters
-    const letters = randomService.split('');
-    for (let i = letters.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [letters[i], letters[j]] = [letters[j], letters[i]];
-    }
-    const scrambled = letters.join('');
-    
-    currentChallenge = {
-        type: 'unscramble',
-        answer: randomService,
-        scrambled: scrambled
-    };
-    
-    // Create challenge content
-    challengeContent.innerHTML = `
-        <p>文字を並べ替えて、AWSサービス名を完成させてください：</p>
-        <div class="scrambled-letters">${scrambled}</div>
-        <div>
-            <input type="text" id="unscramble-input" placeholder="サービス名を入力">
-            <button id="submit-unscramble" class="btn">回答する</button>
-        </div>
-    `;
-    
-    // Add event listener
-    document.getElementById('submit-unscramble').addEventListener('click', function() {
-        if (answered) return;
-        
-        const userGuess = document.getElementById('unscramble-input').value.trim().toUpperCase();
-        const correctAnswer = currentChallenge.answer.toUpperCase();
-        
-        if (userGuess === correctAnswer) {
-            score += 12;
-            updateScore();
-            showFeedback(true, `正解です！${currentChallenge.answer}が正しいです。`);
-        } else {
-            showFeedback(false, `不正解です。正解は${currentChallenge.answer}でした。`);
-        }
-        
-        answered = true;
-    });
-}
+// Initialize the game
+document.addEventListener('DOMContentLoaded', function() {
+    // Start at welcome screen
+    welcomeScreen.classList.remove('hidden');
+    levelSelectScreen.classList.add('hidden');
+    puzzleScreen.classList.add('hidden');
+    resultsScreen.classList.add('hidden');
+});

@@ -1,0 +1,13 @@
+このディレクトリには以下のAWSサービスアイコンを配置してください：
+- s3.png
+- ec2.png
+- cloudfront.png
+- rds.png
+- route53.png
+- acm.png
+- elb.png
+- asg.png
+- dynamodb.png
+- lambda.png
+
+アイコンはAWS公式サイトからダウンロードできます。
