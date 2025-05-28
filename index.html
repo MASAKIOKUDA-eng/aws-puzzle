@@ -38,21 +38,6 @@
                         <p>スケーラブルなウェブアプリケーション</p>
                         <div class="difficulty">難易度: 普通</div>
                     </div>
-                    <div class="level-card" data-level="3">
-                        <h3>レベル 3</h3>
-                        <p>サーバーレスバックエンド</p>
-                        <div class="difficulty">難易度: 普通</div>
-                    </div>
-                    <div class="level-card" data-level="4">
-                        <h3>レベル 4</h3>
-                        <p>マイクロサービスアーキテクチャ</p>
-                        <div class="difficulty">難易度: 難しい</div>
-                    </div>
-                    <div class="level-card" data-level="5">
-                        <h3>レベル 5</h3>
-                        <p>ビッグデータ分析パイプライン</p>
-                        <div class="difficulty">難易度: 難しい</div>
-                    </div>
                 </div>
             </div>
 
@@ -86,16 +71,6 @@
                     <button id="hint-btn" class="btn btn-secondary">ヒント</button>
                     <button id="back-to-levels-btn" class="btn btn-secondary">レベル選択に戻る</button>
                 </div>
-                
-                <div id="feedback-modal" class="modal hidden">
-                    <div class="modal-content">
-                        <span class="close-modal">&times;</span>
-                        <h3 id="feedback-title">結果</h3>
-                        <div id="feedback-message"></div>
-                        <div id="feedback-details"></div>
-                        <button id="continue-btn" class="btn">続ける</button>
-                    </div>
-                </div>
             </div>
 
             <!-- Results Screen -->
@@ -105,6 +80,17 @@
                 <div id="result-message"></div>
                 <div id="completed-levels"></div>
                 <button id="restart-btn" class="btn">もう一度プレイ</button>
+            </div>
+            
+            <!-- Feedback Modal -->
+            <div id="feedback-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3 id="feedback-title">結果</h3>
+                    <div id="feedback-message"></div>
+                    <div id="feedback-details"></div>
+                    <button id="continue-btn" class="btn">続ける</button>
+                </div>
             </div>
         </div>
     </div>

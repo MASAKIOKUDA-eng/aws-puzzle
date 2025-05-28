@@ -23,12 +23,12 @@ const levels = [
             { from: "delivery", to: "security" }
         ],
         availableServices: [
-            { id: "s3", name: "S3", icon: "s3.png", description: "オブジェクトストレージサービス" },
-            { id: "ec2", name: "EC2", icon: "ec2.png", description: "仮想サーバー" },
-            { id: "cloudfront", name: "CloudFront", icon: "cloudfront.png", description: "コンテンツ配信ネットワーク" },
-            { id: "rds", name: "RDS", icon: "rds.png", description: "リレーショナルデータベース" },
-            { id: "route53", name: "Route 53", icon: "route53.png", description: "DNSサービス" },
-            { id: "acm", name: "ACM", icon: "acm.png", description: "SSL/TLS証明書管理" }
+            { id: "s3", name: "S3", description: "オブジェクトストレージサービス" },
+            { id: "ec2", name: "EC2", description: "仮想サーバー" },
+            { id: "cloudfront", name: "CloudFront", description: "コンテンツ配信ネットワーク" },
+            { id: "rds", name: "RDS", description: "リレーショナルデータベース" },
+            { id: "route53", name: "Route 53", description: "DNSサービス" },
+            { id: "acm", name: "ACM", description: "SSL/TLS証明書管理" }
         ],
         solution: {
             "storage": "s3",
@@ -62,12 +62,12 @@ const levels = [
             { from: "compute", to: "database" }
         ],
         availableServices: [
-            { id: "ec2", name: "EC2", icon: "ec2.png", description: "仮想サーバー" },
-            { id: "elb", name: "ELB", icon: "elb.png", description: "Elastic Load Balancing" },
-            { id: "asg", name: "Auto Scaling", icon: "asg.png", description: "Auto Scaling Group" },
-            { id: "rds", name: "RDS", icon: "rds.png", description: "リレーショナルデータベース" },
-            { id: "dynamodb", name: "DynamoDB", icon: "dynamodb.png", description: "NoSQLデータベース" },
-            { id: "lambda", name: "Lambda", icon: "lambda.png", description: "サーバーレスコンピューティング" }
+            { id: "ec2", name: "EC2", description: "仮想サーバー" },
+            { id: "elb", name: "ELB", description: "Elastic Load Balancing" },
+            { id: "asg", name: "Auto Scaling", description: "Auto Scaling Group" },
+            { id: "rds", name: "RDS", description: "リレーショナルデータベース" },
+            { id: "dynamodb", name: "DynamoDB", description: "NoSQLデータベース" },
+            { id: "lambda", name: "Lambda", description: "サーバーレスコンピューティング" }
         ],
         solution: {
             "loadbalancer": "elb",
@@ -90,13 +90,15 @@ let placedServices = {};
 let timerInterval = null;
 let remainingTime = 0;
 
-// DOM Elements - Wrap in try/catch to prevent errors
+// DOM Elements
 let welcomeScreen, levelSelectScreen, puzzleScreen, resultsScreen, puzzleTitle, 
     requirementsList, dropZonesContainer, connectionsContainer, availableServicesContainer,
     scoreElement, finalScoreElement, resultMessage, completedLevelsElement, timerElement,
     feedbackModal, feedbackTitle, feedbackMessage, feedbackDetails;
 
-try {
+// Initialize DOM elements when the page is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM elements
     welcomeScreen = document.getElementById('welcome-screen');
     levelSelectScreen = document.getElementById('level-select-screen');
     puzzleScreen = document.getElementById('puzzle-screen');
@@ -115,39 +117,20 @@ try {
     feedbackTitle = document.getElementById('feedback-title');
     feedbackMessage = document.getElementById('feedback-message');
     feedbackDetails = document.getElementById('feedback-details');
-} catch (e) {
-    console.error('Error initializing DOM elements:', e);
-}
-
-// Event Listeners - Add them only when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        document.getElementById('start-btn').addEventListener('click', showLevelSelect);
-        document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
-        document.getElementById('hint-btn').addEventListener('click', showHint);
-        document.getElementById('back-to-levels-btn').addEventListener('click', showLevelSelect);
-        document.getElementById('continue-btn').addEventListener('click', closeFeedbackModal);
-        document.getElementById('restart-btn').addEventListener('click', showLevelSelect);
-
-        // Add event listener to close modal button if it exists
-        const closeModalBtn = document.querySelector('.close-modal');
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeFeedbackModal);
-        }
-    } catch (e) {
-        console.error('Error setting up event listeners:', e);
-    }
     
-    // Initialize game screens
-    initializeGame();
-});
-
-// Initialize level selection
-function showLevelSelect() {
-    welcomeScreen.classList.add('hidden');
-    resultsScreen.classList.add('hidden');
-    puzzleScreen.classList.add('hidden');
-    levelSelectScreen.classList.remove('hidden');
+    // Set up event listeners
+    document.getElementById('start-btn').addEventListener('click', showLevelSelect);
+    document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
+    document.getElementById('hint-btn').addEventListener('click', showHint);
+    document.getElementById('back-to-levels-btn').addEventListener('click', showLevelSelect);
+    document.getElementById('continue-btn').addEventListener('click', closeFeedbackModal);
+    document.getElementById('restart-btn').addEventListener('click', showLevelSelect);
+    
+    // Add event listener to close modal button
+    const closeModalBtn = document.querySelector('.close-modal');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeFeedbackModal);
+    }
     
     // Add event listeners to level cards
     document.querySelectorAll('.level-card').forEach(card => {
@@ -156,6 +139,31 @@ function showLevelSelect() {
             startLevel(levelId);
         });
     });
+    
+    // Initialize game
+    initializeGame();
+});
+
+// Initialize the game
+function initializeGame() {
+    // Start at welcome screen
+    welcomeScreen.classList.remove('hidden');
+    levelSelectScreen.classList.add('hidden');
+    puzzleScreen.classList.add('hidden');
+    resultsScreen.classList.add('hidden');
+    
+    // Make sure feedback modal is hidden
+    if (feedbackModal) {
+        feedbackModal.classList.add('hidden');
+    }
+}
+
+// Initialize level selection
+function showLevelSelect() {
+    welcomeScreen.classList.add('hidden');
+    resultsScreen.classList.add('hidden');
+    puzzleScreen.classList.add('hidden');
+    levelSelectScreen.classList.remove('hidden');
 }
 
 // Start a level
@@ -217,7 +225,7 @@ function startLevel(levelId) {
         serviceItem.draggable = true;
         serviceItem.dataset.serviceId = service.id;
         
-        // For now, use a placeholder for the icon
+        // Use a placeholder for the icon
         const serviceIcon = document.createElement('div');
         serviceIcon.className = 'service-icon';
         serviceIcon.textContent = service.name.charAt(0);
@@ -339,7 +347,7 @@ function placeService(serviceId, zoneId) {
     placedService.className = 'placed-service';
     placedService.dataset.serviceId = serviceId;
     
-    // For now, use a placeholder for the icon
+    // Use a placeholder for the icon
     const serviceIcon = document.createElement('div');
     serviceIcon.className = 'service-icon';
     serviceIcon.textContent = service.name.charAt(0);
@@ -411,11 +419,17 @@ function showHint() {
     feedbackTitle.textContent = 'ヒント';
     feedbackMessage.textContent = randomHint;
     feedbackDetails.innerHTML = '';
-    feedbackModal.classList.remove('hidden');
+    
+    // Show the modal
+    if (feedbackModal) {
+        feedbackModal.classList.remove('hidden');
+    }
 }
 
 // Show feedback modal
 function showFeedback(isCorrect, levelScore, details) {
+    if (!feedbackModal) return;
+    
     feedbackTitle.textContent = isCorrect ? '正解！' : '不正解';
     feedbackMessage.textContent = isCorrect 
         ? `素晴らしい！すべてのサービスを正しく配置しました。スコア: ${levelScore}点`
@@ -427,17 +441,14 @@ function showFeedback(isCorrect, levelScore, details) {
 
 // Close feedback modal
 function closeFeedbackModal() {
+    if (!feedbackModal) return;
+    
     feedbackModal.classList.add('hidden');
     
     // If all levels are completed, show results
     const allLevelsCompleted = levels.every(level => completedLevels[level.id] !== undefined);
     if (allLevelsCompleted) {
         showResults();
-    }
-    
-    // Don't show any unexpected modals
-    if (feedbackModal.classList.contains('hidden')) {
-        return;
     }
 }
 
@@ -494,24 +505,4 @@ function updateTimer() {
 function getServiceName(serviceId) {
     const service = currentLevel.availableServices.find(s => s.id === serviceId);
     return service ? service.name : serviceId;
-}
-
-// Initialize the game
-function initializeGame() {
-    // Make sure all DOM elements are available
-    if (!welcomeScreen || !levelSelectScreen || !puzzleScreen || !resultsScreen) {
-        console.error('Some required DOM elements are missing');
-        return;
-    }
-    
-    // Start at welcome screen
-    welcomeScreen.classList.remove('hidden');
-    levelSelectScreen.classList.add('hidden');
-    puzzleScreen.classList.add('hidden');
-    resultsScreen.classList.add('hidden');
-    
-    // Make sure feedback modal is hidden
-    if (feedbackModal) {
-        feedbackModal.classList.add('hidden');
-    }
 }
