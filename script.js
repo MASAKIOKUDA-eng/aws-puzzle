@@ -90,34 +90,57 @@ let placedServices = {};
 let timerInterval = null;
 let remainingTime = 0;
 
-// DOM Elements
-const welcomeScreen = document.getElementById('welcome-screen');
-const levelSelectScreen = document.getElementById('level-select-screen');
-const puzzleScreen = document.getElementById('puzzle-screen');
-const resultsScreen = document.getElementById('results-screen');
-const puzzleTitle = document.getElementById('puzzle-title');
-const requirementsList = document.getElementById('requirements-list');
-const dropZonesContainer = document.getElementById('drop-zones');
-const connectionsContainer = document.getElementById('connections');
-const availableServicesContainer = document.getElementById('available-services');
-const scoreElement = document.getElementById('score');
-const finalScoreElement = document.getElementById('final-score');
-const resultMessage = document.getElementById('result-message');
-const completedLevelsElement = document.getElementById('completed-levels');
-const timerElement = document.getElementById('timer');
-const feedbackModal = document.getElementById('feedback-modal');
-const feedbackTitle = document.getElementById('feedback-title');
-const feedbackMessage = document.getElementById('feedback-message');
-const feedbackDetails = document.getElementById('feedback-details');
+// DOM Elements - Wrap in try/catch to prevent errors
+let welcomeScreen, levelSelectScreen, puzzleScreen, resultsScreen, puzzleTitle, 
+    requirementsList, dropZonesContainer, connectionsContainer, availableServicesContainer,
+    scoreElement, finalScoreElement, resultMessage, completedLevelsElement, timerElement,
+    feedbackModal, feedbackTitle, feedbackMessage, feedbackDetails;
 
-// Event Listeners
-document.getElementById('start-btn').addEventListener('click', showLevelSelect);
-document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
-document.getElementById('hint-btn').addEventListener('click', showHint);
-document.getElementById('back-to-levels-btn').addEventListener('click', showLevelSelect);
-document.getElementById('continue-btn').addEventListener('click', closeFeedbackModal);
-document.getElementById('restart-btn').addEventListener('click', showLevelSelect);
-document.querySelector('.close-modal').addEventListener('click', closeFeedbackModal);
+try {
+    welcomeScreen = document.getElementById('welcome-screen');
+    levelSelectScreen = document.getElementById('level-select-screen');
+    puzzleScreen = document.getElementById('puzzle-screen');
+    resultsScreen = document.getElementById('results-screen');
+    puzzleTitle = document.getElementById('puzzle-title');
+    requirementsList = document.getElementById('requirements-list');
+    dropZonesContainer = document.getElementById('drop-zones');
+    connectionsContainer = document.getElementById('connections');
+    availableServicesContainer = document.getElementById('available-services');
+    scoreElement = document.getElementById('score');
+    finalScoreElement = document.getElementById('final-score');
+    resultMessage = document.getElementById('result-message');
+    completedLevelsElement = document.getElementById('completed-levels');
+    timerElement = document.getElementById('timer');
+    feedbackModal = document.getElementById('feedback-modal');
+    feedbackTitle = document.getElementById('feedback-title');
+    feedbackMessage = document.getElementById('feedback-message');
+    feedbackDetails = document.getElementById('feedback-details');
+} catch (e) {
+    console.error('Error initializing DOM elements:', e);
+}
+
+// Event Listeners - Add them only when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        document.getElementById('start-btn').addEventListener('click', showLevelSelect);
+        document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('back-to-levels-btn').addEventListener('click', showLevelSelect);
+        document.getElementById('continue-btn').addEventListener('click', closeFeedbackModal);
+        document.getElementById('restart-btn').addEventListener('click', showLevelSelect);
+
+        // Add event listener to close modal button if it exists
+        const closeModalBtn = document.querySelector('.close-modal');
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeFeedbackModal);
+        }
+    } catch (e) {
+        console.error('Error setting up event listeners:', e);
+    }
+    
+    // Initialize game screens
+    initializeGame();
+});
 
 // Initialize level selection
 function showLevelSelect() {
@@ -474,11 +497,21 @@ function getServiceName(serviceId) {
 }
 
 // Initialize the game
-document.addEventListener('DOMContentLoaded', function() {
+function initializeGame() {
+    // Make sure all DOM elements are available
+    if (!welcomeScreen || !levelSelectScreen || !puzzleScreen || !resultsScreen) {
+        console.error('Some required DOM elements are missing');
+        return;
+    }
+    
     // Start at welcome screen
     welcomeScreen.classList.remove('hidden');
     levelSelectScreen.classList.add('hidden');
     puzzleScreen.classList.add('hidden');
     resultsScreen.classList.add('hidden');
-    feedbackModal.classList.add('hidden');
-});
+    
+    // Make sure feedback modal is hidden
+    if (feedbackModal) {
+        feedbackModal.classList.add('hidden');
+    }
+}
