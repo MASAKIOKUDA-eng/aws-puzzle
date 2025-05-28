@@ -387,7 +387,7 @@ function showHint() {
     // Show hint in feedback modal
     feedbackTitle.textContent = 'ヒント';
     feedbackMessage.textContent = randomHint;
-    feedbackDetails.textContent = '';
+    feedbackDetails.innerHTML = '';
     feedbackModal.classList.remove('hidden');
 }
 
@@ -410,6 +410,11 @@ function closeFeedbackModal() {
     const allLevelsCompleted = levels.every(level => completedLevels[level.id] !== undefined);
     if (allLevelsCompleted) {
         showResults();
+    }
+    
+    // Don't show any unexpected modals
+    if (feedbackModal.classList.contains('hidden')) {
+        return;
     }
 }
 
@@ -475,4 +480,5 @@ document.addEventListener('DOMContentLoaded', function() {
     levelSelectScreen.classList.add('hidden');
     puzzleScreen.classList.add('hidden');
     resultsScreen.classList.add('hidden');
+    feedbackModal.classList.add('hidden');
 });
