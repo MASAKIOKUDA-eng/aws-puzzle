@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS サービスパズルゲーム</title>
+    <title>AWS アーキテクチャパズルゲーム</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>AWS サービスパズルゲーム</h1>
+            <h1>AWS アーキテクチャパズルゲーム</h1>
         </div>
     </header>
 
@@ -17,29 +17,85 @@
         <div class="game-area">
             <!-- Welcome Screen -->
             <div id="welcome-screen" class="welcome-screen">
-                <h2>AWSサービスの知識をテストしよう！</h2>
-                <p>このゲームでは、AWSサービスに関する様々なパズルに挑戦できます。</p>
-                <p>4種類のチャレンジがあり、各ラウンドでランダムに出題されます。</p>
-                <ul style="text-align: left; display: inline-block;">
-                    <li>サービス名当てクイズ</li>
-                    <li>サービスとその説明のマッチング</li>
-                    <li>穴埋めクイズ</li>
-                    <li>文字並べ替えクイズ</li>
-                </ul>
-                <p>全5ラウンドで、正解するとポイントが加算されます。</p>
+                <h2>AWSサービスを組み合わせてソリューションを構築しよう！</h2>
+                <p>このゲームでは、与えられた要件に合わせてAWSサービスを組み合わせ、最適なアーキテクチャを構築します。</p>
+                <p>各レベルでは、ビジネス要件が提示され、それを満たすためのAWSサービスを選択・配置していきます。</p>
+                <p>正しいサービスを選び、適切に配置することでポイントを獲得できます。</p>
                 <button id="start-btn" class="btn">ゲームを始める</button>
             </div>
 
-            <!-- Challenge Screen -->
-            <div id="challenge-screen" class="challenge-screen hidden">
-                <div class="progress-bar">
-                    <div id="progress" class="progress" style="width: 0%"></div>
+            <!-- Level Selection Screen -->
+            <div id="level-select-screen" class="level-select-screen hidden">
+                <h2>レベルを選択</h2>
+                <div class="level-grid">
+                    <div class="level-card" data-level="1">
+                        <h3>レベル 1</h3>
+                        <p>静的ウェブサイトホスティング</p>
+                        <div class="difficulty">難易度: 簡単</div>
+                    </div>
+                    <div class="level-card" data-level="2">
+                        <h3>レベル 2</h3>
+                        <p>スケーラブルなウェブアプリケーション</p>
+                        <div class="difficulty">難易度: 普通</div>
+                    </div>
+                    <div class="level-card" data-level="3">
+                        <h3>レベル 3</h3>
+                        <p>サーバーレスバックエンド</p>
+                        <div class="difficulty">難易度: 普通</div>
+                    </div>
+                    <div class="level-card" data-level="4">
+                        <h3>レベル 4</h3>
+                        <p>マイクロサービスアーキテクチャ</p>
+                        <div class="difficulty">難易度: 難しい</div>
+                    </div>
+                    <div class="level-card" data-level="5">
+                        <h3>レベル 5</h3>
+                        <p>ビッグデータ分析パイプライン</p>
+                        <div class="difficulty">難易度: 難しい</div>
+                    </div>
                 </div>
-                <h2 id="challenge-title">チャレンジ</h2>
-                <div id="challenge-content" class="challenge-content"></div>
-                <div id="feedback" class="feedback hidden"></div>
-                <div class="score-display">スコア: <span id="score">0</span></div>
-                <button id="next-btn" class="btn" disabled>次へ</button>
+            </div>
+
+            <!-- Puzzle Screen -->
+            <div id="puzzle-screen" class="puzzle-screen hidden">
+                <div class="puzzle-header">
+                    <h2 id="puzzle-title">レベル 1: 静的ウェブサイトホスティング</h2>
+                    <div class="score-display">スコア: <span id="score">0</span></div>
+                </div>
+                
+                <div class="puzzle-container">
+                    <div class="requirements-panel">
+                        <h3>要件:</h3>
+                        <div id="requirements-list"></div>
+                        <div class="timer">残り時間: <span id="timer">05:00</span></div>
+                    </div>
+                    
+                    <div class="architecture-board">
+                        <div id="drop-zones" class="drop-zones"></div>
+                        <div id="connections" class="connections"></div>
+                    </div>
+                    
+                    <div class="services-panel">
+                        <h3>利用可能なサービス:</h3>
+                        <div id="available-services" class="available-services"></div>
+                    </div>
+                </div>
+                
+                <div class="puzzle-footer">
+                    <button id="check-solution-btn" class="btn">解答を確認</button>
+                    <button id="hint-btn" class="btn btn-secondary">ヒント</button>
+                    <button id="back-to-levels-btn" class="btn btn-secondary">レベル選択に戻る</button>
+                </div>
+                
+                <div id="feedback-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h3 id="feedback-title">結果</h3>
+                        <div id="feedback-message"></div>
+                        <div id="feedback-details"></div>
+                        <button id="continue-btn" class="btn">続ける</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Results Screen -->
@@ -47,6 +103,7 @@
                 <h2>ゲーム終了！</h2>
                 <div class="score-display">最終スコア: <span id="final-score">0</span></div>
                 <div id="result-message"></div>
+                <div id="completed-levels"></div>
                 <button id="restart-btn" class="btn">もう一度プレイ</button>
             </div>
         </div>
