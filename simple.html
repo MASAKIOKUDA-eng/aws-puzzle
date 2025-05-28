@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS アーキテクチャパズルゲーム - シンプル版</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #232f3e;
+            text-align: center;
+        }
+        .btn {
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #ec7211;
+        }
+        .level {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .level h2 {
+            margin-top: 0;
+        }
+        .requirements {
+            margin: 15px 0;
+        }
+        .requirement {
+            margin: 5px 0;
+        }
+        .services {
+            margin: 15px 0;
+        }
+        .service {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #eee;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .service.selected {
+            background-color: #d1ecf1;
+            border: 1px solid #0073bb;
+        }
+        .solution {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+        .solution.visible {
+            display: block;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AWS アーキテクチャパズルゲーム - シンプル版</h1>
+        
+        <div class="level">
+            <h2>レベル 1: 静的ウェブサイトホスティング</h2>
+            <p>コスト効率の良い静的ウェブサイトをホスティングするソリューションを構築してください。</p>
+            
+            <div class="requirements">
+                <h3>要件:</h3>
+                <div class="requirement">- 静的HTMLファイル、CSS、JavaScriptをホスティングする</div>
+                <div class="requirement">- グローバルに高速なコンテンツ配信を実現する</div>
+                <div class="requirement">- HTTPSによる安全な接続を提供する</div>
+                <div class="requirement">- コスト効率の良いソリューションであること</div>
+            </div>
+            
+            <div class="services">
+                <h3>利用可能なサービス:</h3>
+                <div class="service" data-service="s3">S3</div>
+                <div class="service" data-service="ec2">EC2</div>
+                <div class="service" data-service="cloudfront">CloudFront</div>
+                <div class="service" data-service="rds">RDS</div>
+                <div class="service" data-service="route53">Route 53</div>
+                <div class="service" data-service="acm">ACM</div>
+            </div>
+            
+            <div>
+                <h3>あなたの選択:</h3>
+                <div>
+                    <label>ストレージ: </label>
+                    <span id="storage-choice">未選択</span>
+                </div>
+                <div>
+                    <label>配信: </label>
+                    <span id="delivery-choice">未選択</span>
+                </div>
+                <div>
+                    <label>セキュリティ: </label>
+                    <span id="security-choice">未選択</span>
+                </div>
+            </div>
+            
+            <button id="check-level1" class="btn">解答を確認</button>
+            
+            <div id="solution-level1" class="solution">
+                <h3>結果:</h3>
+                <div id="result-level1"></div>
+            </div>
+        </div>
+        
+        <div class="level">
+            <h2>レベル 2: スケーラブルなウェブアプリケーション</h2>
+            <p>負荷に応じて自動的にスケールするウェブアプリケーションを構築してください。</p>
+            
+            <div class="requirements">
+                <h3>要件:</h3>
+                <div class="requirement">- Webサーバーを複数のアベイラビリティゾーンに配置する</div>
+                <div class="requirement">- 負荷に応じて自動的にスケールする仕組みを実装する</div>
+                <div class="requirement">- トラフィックを複数のサーバーに分散する</div>
+                <div class="requirement">- データを永続化するためのデータベースを設定する</div>
+            </div>
+            
+            <div class="services">
+                <h3>利用可能なサービス:</h3>
+                <div class="service" data-service="ec2">EC2</div>
+                <div class="service" data-service="elb">ELB</div>
+                <div class="service" data-service="asg">Auto Scaling</div>
+                <div class="service" data-service="rds">RDS</div>
+                <div class="service" data-service="dynamodb">DynamoDB</div>
+                <div class="service" data-service="lambda">Lambda</div>
+            </div>
+            
+            <div>
+                <h3>あなたの選択:</h3>
+                <div>
+                    <label>負荷分散: </label>
+                    <span id="loadbalancer-choice">未選択</span>
+                </div>
+                <div>
+                    <label>コンピューティング: </label>
+                    <span id="compute-choice">未選択</span>
+                </div>
+                <div>
+                    <label>データベース: </label>
+                    <span id="database-choice">未選択</span>
+                </div>
+            </div>
+            
+            <button id="check-level2" class="btn">解答を確認</button>
+            
+            <div id="solution-level2" class="solution">
+                <h3>結果:</h3>
+                <div id="result-level2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // レベル1の正解
+            const level1Solution = {
+                "storage": "s3",
+                "delivery": "cloudfront",
+                "security": "acm"
+            };
+            
+            // レベル2の正解
+            const level2Solution = {
+                "loadbalancer": "elb",
+                "compute": "asg",
+                "database": "rds"
+            };
+            
+            // ユーザーの選択
+            const userChoices = {
+                "storage": "",
+                "delivery": "",
+                "security": "",
+                "loadbalancer": "",
+                "compute": "",
+                "database": ""
+            };
+            
+            // サービス選択のイベントリスナー
+            document.querySelectorAll('.service').forEach(service => {
+                service.addEventListener('click', function() {
+                    const serviceId = this.dataset.service;
+                    const serviceType = getServiceType(this);
+                    
+                    if (serviceType) {
+                        // 以前の選択を解除
+                        document.querySelectorAll(`.service[data-type="${serviceType}"]`).forEach(s => {
+                            s.classList.remove('selected');
+                            s.removeAttribute('data-type');
+                        });
+                        
+                        // 新しい選択を設定
+                        this.classList.add('selected');
+                        this.dataset.type = serviceType;
+                        
+                        // 選択を保存
+                        userChoices[serviceType] = serviceId;
+                        
+                        // 表示を更新
+                        document.getElementById(`${serviceType}-choice`).textContent = this.textContent;
+                    }
+                });
+            });
+            
+            // サービスタイプを取得する関数
+            function getServiceType(serviceElement) {
+                // サービス要素の親要素のクラスを確認
+                const parentClass = serviceElement.parentElement.className;
+                
+                // 親要素が最初のレベルのサービスリストに属しているか確認
+                if (parentClass === 'services' && serviceElement.closest('.level') === document.querySelector('.level:nth-child(1)')) {
+                    // ユーザーに選択させるタイプを尋ねる
+                    const type = prompt('このサービスをどの役割に使用しますか？\n1: ストレージ\n2: 配信\n3: セキュリティ');
+                    
+                    switch (type) {
+                        case '1': return 'storage';
+                        case '2': return 'delivery';
+                        case '3': return 'security';
+                        default: return null;
+                    }
+                }
+                // 親要素が2番目のレベルのサービスリストに属しているか確認
+                else if (parentClass === 'services' && serviceElement.closest('.level') === document.querySelector('.level:nth-child(2)')) {
+                    // ユーザーに選択させるタイプを尋ねる
+                    const type = prompt('このサービスをどの役割に使用しますか？\n1: 負荷分散\n2: コンピューティング\n3: データベース');
+                    
+                    switch (type) {
+                        case '1': return 'loadbalancer';
+                        case '2': return 'compute';
+                        case '3': return 'database';
+                        default: return null;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // レベル1の解答確認
+            document.getElementById('check-level1').addEventListener('click', function() {
+                const resultElement = document.getElementById('result-level1');
+                const solutionElement = document.getElementById('solution-level1');
+                let correct = 0;
+                let resultHTML = '';
+                
+                // 各選択を確認
+                for (const [type, expectedService] of Object.entries(level1Solution)) {
+                    const userService = userChoices[type];
+                    
+                    if (userService === expectedService) {
+                        correct++;
+                        resultHTML += `<div class="correct">✓ ${type}に${getServiceName(expectedService)}を正しく選択しました。</div>`;
+                    } else if (userService) {
+                        resultHTML += `<div class="incorrect">✗ ${type}には${getServiceName(expectedService)}が必要ですが、${getServiceName(userService)}を選択しています。</div>`;
+                    } else {
+                        resultHTML += `<div class="incorrect">✗ ${type}に${getServiceName(expectedService)}を選択する必要があります。</div>`;
+                    }
+                }
+                
+                // スコアを計算
+                const score = Math.round((correct / Object.keys(level1Solution).length) * 100);
+                resultHTML = `<div>スコア: ${score}点</div>` + resultHTML;
+                
+                // 結果を表示
+                resultElement.innerHTML = resultHTML;
+                solutionElement.classList.add('visible');
+            });
+            
+            // レベル2の解答確認
+            document.getElementById('check-level2').addEventListener('click', function() {
+                const resultElement = document.getElementById('result-level2');
+                const solutionElement = document.getElementById('solution-level2');
+                let correct = 0;
+                let resultHTML = '';
+                
+                // 各選択を確認
+                for (const [type, expectedService] of Object.entries(level2Solution)) {
+                    const userService = userChoices[type];
+                    
+                    if (userService === expectedService) {
+                        correct++;
+                        resultHTML += `<div class="correct">✓ ${type}に${getServiceName(expectedService)}を正しく選択しました。</div>`;
+                    } else if (userService) {
+                        resultHTML += `<div class="incorrect">✗ ${type}には${getServiceName(expectedService)}が必要ですが、${getServiceName(userService)}を選択しています。</div>`;
+                    } else {
+                        resultHTML += `<div class="incorrect">✗ ${type}に${getServiceName(expectedService)}を選択する必要があります。</div>`;
+                    }
+                }
+                
+                // スコアを計算
+                const score = Math.round((correct / Object.keys(level2Solution).length) * 100);
+                resultHTML = `<div>スコア: ${score}点</div>` + resultHTML;
+                
+                // 結果を表示
+                resultElement.innerHTML = resultHTML;
+                solutionElement.classList.add('visible');
+            });
+            
+            // サービス名を取得する関数
+            function getServiceName(serviceId) {
+                const serviceElement = document.querySelector(`.service[data-service="${serviceId}"]`);
+                return serviceElement ? serviceElement.textContent : serviceId;
+            }
+        });
+    </script>
+</body>
+</html>

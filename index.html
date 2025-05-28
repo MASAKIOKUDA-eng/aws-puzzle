@@ -4,97 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWS アーキテクチャパズルゲーム</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>AWS アーキテクチャパズルゲーム</h1>
-        </div>
+        <h1>AWS アーキテクチャパズルゲーム</h1>
     </header>
 
-    <div class="container">
-        <div class="game-area">
-            <!-- Welcome Screen -->
-            <div id="welcome-screen" class="welcome-screen">
-                <h2>AWSサービスを組み合わせてソリューションを構築しよう！</h2>
-                <p>このゲームでは、与えられた要件に合わせてAWSサービスを組み合わせ、最適なアーキテクチャを構築します。</p>
-                <p>各レベルでは、ビジネス要件が提示され、それを満たすためのAWSサービスを選択・配置していきます。</p>
-                <p>正しいサービスを選び、適切に配置することでポイントを獲得できます。</p>
-                <button id="start-btn" class="btn">ゲームを始める</button>
-            </div>
+    <main>
+        <div id="welcome-screen" class="screen">
+            <h2>AWSサービスを組み合わせてアーキテクチャを構築しよう！</h2>
+            <p>このゲームでは、与えられた要件に合わせてAWSサービスを組み合わせ、最適なアーキテクチャを構築します。</p>
+            <p>全5問のパズルに挑戦して、あなたのAWS知識をテストしましょう！</p>
+            <button id="start-button" class="btn primary-btn">ゲームを始める</button>
+        </div>
 
-            <!-- Level Selection Screen -->
-            <div id="level-select-screen" class="level-select-screen hidden">
-                <h2>レベルを選択</h2>
-                <div class="level-grid">
-                    <div class="level-card" data-level="1">
-                        <h3>レベル 1</h3>
-                        <p>静的ウェブサイトホスティング</p>
-                        <div class="difficulty">難易度: 簡単</div>
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="progress-container">
+                    <div class="progress-text">問題 <span id="current-question">1</span>/5</div>
+                    <div class="progress-bar">
+                        <div id="progress-fill"></div>
                     </div>
-                    <div class="level-card" data-level="2">
-                        <h3>レベル 2</h3>
-                        <p>スケーラブルなウェブアプリケーション</p>
-                        <div class="difficulty">難易度: 普通</div>
-                    </div>
+                </div>
+                <div class="score-container">
+                    スコア: <span id="score">0</span>
                 </div>
             </div>
 
-            <!-- Puzzle Screen -->
-            <div id="puzzle-screen" class="puzzle-screen hidden">
-                <div class="puzzle-header">
-                    <h2 id="puzzle-title">レベル 1: 静的ウェブサイトホスティング</h2>
-                    <div class="score-display">スコア: <span id="score">0</span></div>
+            <div class="game-content">
+                <div class="requirements-panel">
+                    <h3>要件</h3>
+                    <div id="question-title" class="question-title"></div>
+                    <ul id="requirements-list"></ul>
                 </div>
-                
-                <div class="puzzle-container">
-                    <div class="requirements-panel">
-                        <h3>要件:</h3>
-                        <div id="requirements-list"></div>
-                        <div class="timer">残り時間: <span id="timer">05:00</span></div>
-                    </div>
-                    
-                    <div class="architecture-board">
-                        <div id="drop-zones" class="drop-zones"></div>
-                        <div id="connections" class="connections"></div>
-                    </div>
-                    
-                    <div class="services-panel">
-                        <h3>利用可能なサービス:</h3>
-                        <div id="available-services" class="available-services"></div>
+
+                <div class="architecture-panel">
+                    <div id="architecture-canvas">
+                        <!-- ドロップゾーンはJSで動的に生成 -->
                     </div>
                 </div>
-                
-                <div class="puzzle-footer">
-                    <button id="check-solution-btn" class="btn">解答を確認</button>
-                    <button id="hint-btn" class="btn btn-secondary">ヒント</button>
-                    <button id="back-to-levels-btn" class="btn btn-secondary">レベル選択に戻る</button>
+
+                <div class="services-panel">
+                    <h3>AWSサービス</h3>
+                    <div id="services-list" class="services-list">
+                        <!-- サービスはJSで動的に生成 -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Results Screen -->
-            <div id="results-screen" class="results-screen hidden">
-                <h2>ゲーム終了！</h2>
-                <div class="score-display">最終スコア: <span id="final-score">0</span></div>
-                <div id="result-message"></div>
-                <div id="completed-levels"></div>
-                <button id="restart-btn" class="btn">もう一度プレイ</button>
-            </div>
-            
-            <!-- Feedback Modal -->
-            <div id="feedback-modal" class="modal hidden">
-                <div class="modal-content">
-                    <span class="close-modal">&times;</span>
-                    <h3 id="feedback-title">結果</h3>
-                    <div id="feedback-message"></div>
-                    <div id="feedback-details"></div>
-                    <button id="continue-btn" class="btn">続ける</button>
-                </div>
+            <div class="game-footer">
+                <button id="check-answer-button" class="btn primary-btn">解答を確認</button>
+                <button id="hint-button" class="btn secondary-btn">ヒント</button>
             </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+        <div id="feedback-screen" class="screen hidden">
+            <h2 id="feedback-title"></h2>
+            <div id="feedback-message"></div>
+            <div id="feedback-details"></div>
+            <button id="continue-button" class="btn primary-btn">次へ</button>
+        </div>
+
+        <div id="results-screen" class="screen hidden">
+            <h2>ゲーム終了！</h2>
+            <div class="final-score">最終スコア: <span id="final-score">0</span>/100</div>
+            <div id="result-message"></div>
+            <div id="question-results"></div>
+            <button id="restart-button" class="btn primary-btn">もう一度プレイ</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>AWS アーキテクチャパズルゲーム - GitHub.io版</p>
+    </footer>
+
+    <script src="game.js"></script>
 </body>
 </html>

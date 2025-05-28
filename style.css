@@ -1,0 +1,378 @@
+/* AWS Architecture Puzzle Game Styles */
+:root {
+    --primary-color: #232f3e;
+    --secondary-color: #ff9900;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Amazon Ember', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--light-bg);
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+h1, h2, h3 {
+    margin-bottom: 1rem;
+}
+
+ul {
+    list-style-position: inside;
+    margin-bottom: 1rem;
+}
+
+.screen {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Welcome Screen */
+#welcome-screen {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#welcome-screen p {
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.primary-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: #e68a00;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Game Screen */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.progress-container {
+    flex: 1;
+}
+
+.progress-text {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 300px;
+}
+
+#progress-fill {
+    height: 100%;
+    background-color: var(--secondary-color);
+    width: 20%; /* Will be updated by JS */
+    transition: width 0.3s ease;
+}
+
+.score-container {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.game-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.requirements-panel, .services-panel {
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.question-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.architecture-panel {
+    background-color: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    position: relative;
+}
+
+#architecture-canvas {
+    width: 100%;
+    height: 400px;
+    position: relative;
+}
+
+.drop-zone {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s;
+}
+
+.drop-zone.highlight {
+    border-color: var(--secondary-color);
+    background-color: rgba(255, 153, 0, 0.1);
+}
+
+.drop-zone-label {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.service-item {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.service-item:hover {
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.service-icon {
+    width: 32px;
+    height: 32px;
+    background-color: var(--light-bg);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.service-info {
+    flex: 1;
+}
+
+.service-name {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.service-description {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.placed-service {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.placed-service .service-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.connection {
+    position: absolute;
+    height: 2px;
+    background-color: #6c757d;
+    transform-origin: 0 0;
+    z-index: 1;
+}
+
+.game-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Feedback Screen */
+#feedback-screen {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#feedback-title {
+    color: var(--primary-color);
+}
+
+#feedback-message {
+    margin-bottom: 1.5rem;
+}
+
+#feedback-details {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+}
+
+.feedback-item {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.feedback-item.correct {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+}
+
+.feedback-item.incorrect {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+/* Results Screen */
+#results-screen {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.final-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1.5rem 0;
+}
+
+#result-message {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+#question-results {
+    margin-bottom: 2rem;
+}
+
+.question-result {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.question-result:last-child {
+    border-bottom: none;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .game-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .architecture-panel {
+        order: 1;
+    }
+    
+    .requirements-panel {
+        order: 0;
+    }
+    
+    .services-panel {
+        order: 2;
+    }
+    
+    #architecture-canvas {
+        height: 300px;
+    }
+}
